@@ -11,12 +11,11 @@ class Robot extends Equatable {
 
   factory Robot.fromJson(Map<String, dynamic> json) {
     return Robot(
-      mac: json['id'] as String,
-      name: json['client_name'] as String,
-      clientID: json['client_id'] as String,
-      status: json['status'] as bool,
-      enable: false,
-    );
+        mac: json['id'] as String,
+        name: json['client_name'] as String,
+        clientID: json['client_id'] as String,
+        status: json['status'] as bool,
+        enable: false);
   }
 
   Robot copyWith({bool? enable, bool? status}) {

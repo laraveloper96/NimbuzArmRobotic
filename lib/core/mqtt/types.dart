@@ -1,6 +1,7 @@
 enum Topic {
-  human('human/register/spider'),
-  move('spider/movement');
+  human('human/register/robot'),
+  move('robot/movement'),
+  speed('robot/speed');
 
   const Topic(this.url);
 

@@ -12,7 +12,8 @@ abstract class Mqtt {
   Future<void> sendMessage({
     required Topic topic,
     required String clientId,
-    required int command,
+    required String command,
+    required int value,
   });
 
   Future<void> subscribeTopic(
@@ -24,4 +25,6 @@ abstract class Mqtt {
   );
 
   Stream<Robot> onMessages();
+  Future<void> onAutoReconnect();
+  Future<void> onAutoReconnected();
 }

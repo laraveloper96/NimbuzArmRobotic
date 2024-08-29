@@ -14,11 +14,13 @@ class Label extends StatelessWidget {
     this.text, {
     this.type,
     this.color,
+    this.textAlign,
     super.key,
   });
 
   final String text;
   final LabelType? type;
+  final TextAlign? textAlign;
   final Color? color;
 
   TextStyle _getStyle() {
@@ -70,6 +72,7 @@ class Label extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      textAlign: textAlign,
       style: _getStyle(),
     );
   }

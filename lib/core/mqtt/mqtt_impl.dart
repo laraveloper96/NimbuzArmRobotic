@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 // import 'package:mqtt_client/mqtt_browser_client.dart';
 import 'package:mqtt_client/mqtt_client.dart' hide Topic;
@@ -23,19 +22,21 @@ class MqttImpl implements Mqtt {
   @override
   bool get isConnect =>
       _client!.connectionStatus?.state == MqttConnectionState.connected;
-
   @override
   Future<bool> connect(Options options) async {
     try {
       print('[MQTT client] MQTT start....');
       _client ??= MqttServerClient.withPort(
           options.host, options.clientId, options.port);
-      // _client!.port = options.port;
+
+      _client!.keepAlivePeriod = 30;
+      _client!.logging(on: false);
+      _client!.setProtocolV311();
       _client!.keepAlivePeriod = 20;
-      _client!.secure = false;
       _client!.connectTimeoutPeriod = 2000;
-      _client!.onConnected = onConnected;
-      // _client!.onSubscribed = onSubscribed;
+      // _client!.autoReconnect = true;
+      // _client!.onAutoReconnect = onAutoReconnect;
+      // _client!.onAutoReconnected = onAutoReconnected;
       final connMessage = MqttConnectMessage()
           .authenticateAs('username', 'password')
           .withWillTopic('willtopic')
@@ -43,39 +44,18 @@ class MqttImpl implements Mqtt {
           .startClean()
           .withWillQos(MqttQos.atLeastOnce);
       _client!.connectionMessage = connMessage;
+
+      final connMess = MqttConnectMessage()
+          .withClientIdentifier(options.clientId)
+          .startClean()
+          .withWillQos(MqttQos.atMostOnce);
+
+      print('[MQTT client] MQTT client connecting....');
+
+      _client!.connectionMessage = connMess;
+
       await _client!.connect();
-      log(_client!.connectionStatus.toString());
-      if (_client!.connectionStatus!.state == MqttConnectionState.connected) {
-        print('Successfully connected to the MQTT broker');
-        _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
-          final recMessage = c![0].payload as MqttPublishMessage;
-          final payload = MqttPublishPayload.bytesToStringAsString(
-              recMessage.payload.message);
-
-          print('Received message:$payload from topic: ${c[0].topic}');
-        });
-      } else {
-        print('Failed to connect to the MQTT broker');
-      }
-
-      // _client!.port = 8081; //options.port;
-      // _client!.keepAlivePeriod = 30;
-      // _client!.logging(on: false);
-      // _client!.setProtocolV311();
-
-      // _client!.websocketProtocols = MqttClientConstants.protocolsSingleDefault;
-
-      // final connMess = MqttConnectMessage()
-      //     .withClientIdentifier(options.clientId)
-      //     .startClean()
-      //     .withWillQos(MqttQos.atMostOnce);
-
-      // print('[MQTT client] MQTT client connecting....');
-
-      // _client!.connectionMessage = connMess;
-
-      // await _client!.connect();
-      // print('[MQTT client] MQTT client connected');
+      print('[MQTT client] MQTT client connected');
 
       final result =
           _client!.connectionStatus?.state == MqttConnectionState.connected;
@@ -87,48 +67,6 @@ class MqttImpl implements Mqtt {
       return false;
     }
   }
-
-  void onConnected() {
-    print('😀Connected');
-    _client!.subscribe("topic/test2", MqttQos.atLeastOnce);
-    // client.subscribe('your_topic', MqttQos.atLeastOnce);
-  }
-  // @override
-  // Future<bool> connect(Options options) async {
-  //   try {
-  //     print('[MQTT client] MQTT start....');
-  //     _client ??= MqttServerClient('ws://test.mosquitto.org', options.clientId);
-
-  //     _client!.port = 8081; //options.port;
-  //     _client!.keepAlivePeriod = 30;
-  //     _client!.logging(on: false);
-  //     _client!.setProtocolV311();
-  //     _client!.keepAlivePeriod = 20;
-  //     _client!.connectTimeoutPeriod = 2000;
-  //     _client!.websocketProtocols = MqttClientConstants.protocolsSingleDefault;
-
-  //     final connMess = MqttConnectMessage()
-  //         .withClientIdentifier(options.clientId)
-  //         .startClean()
-  //         .withWillQos(MqttQos.atMostOnce);
-
-  //     print('[MQTT client] MQTT client connecting....');
-
-  //     _client!.connectionMessage = connMess;
-
-  //     await _client!.connect();
-  //     print('[MQTT client] MQTT client connected');
-
-  //     final result =
-  //         _client!.connectionStatus?.state == MqttConnectionState.connected;
-  //     return result;
-  //   } catch (e) {
-  //     print(e);
-  //     _client!.disconnect();
-  //     print('[MQTT client] MQTT client disconnected');
-  //     return false;
-  //   }
-  // }
 
   @override
   Future<void> disconnect() async {
@@ -143,7 +81,8 @@ class MqttImpl implements Mqtt {
   Future<int> sendMessage({
     required Topic topic,
     required String clientId,
-    required int command,
+    required String command,
+    required int value,
   }) async {
     if (_client == null) throw Exception('[Error]: Required connect first');
 
@@ -157,18 +96,20 @@ class MqttImpl implements Mqtt {
 
     print('[MQTT client] MQTT client sending message');
 
-    final value = <String, dynamic>{
+    final valMap = <String, dynamic>{
       'client_id': clientId,
       'command': command,
+      'value': value,
     };
 
     _builder
       ..clear()
-      ..addString(jsonEncode(value));
+      ..addString(jsonEncode(valMap));
 
     final result = _client!.publishMessage(
       topic.url,
-      MqttQos.exactlyOnce,
+      MqttQos.atLeastOnce,
+      // MqttQos.exactlyOnce,
       _builder.payload!,
     );
 
@@ -184,10 +125,11 @@ class MqttImpl implements Mqtt {
 
     print('[MQTT client] MQTT client subcribing topic...');
 
-    _client!.subscribe(topic.url, MqttQos.exactlyOnce);
+    _client!.subscribe(topic.url, MqttQos.atLeastOnce);
 
     print('[MQTT client] MQTT client subcribed topic');
-    messagesSubscription = _client!.updates?.listen((event) {
+    messagesSubscription = _client!.updates
+        ?.listen((List<MqttReceivedMessage<MqttMessage?>> event) {
       if (event.isNotEmpty) {
         final mqttMessage = event.first;
         final recMess = mqttMessage.payload as MqttPublishMessage;
@@ -221,5 +163,17 @@ class MqttImpl implements Mqtt {
   void _dispose() {
     messagesSubscription?.cancel();
     print('[MQTT client] MQTT dispose');
+  }
+
+  /// The pre auto re connect callback
+  @override
+  Future<void> onAutoReconnect() async {
+    print('[MQTT client] MQTT Client auto reconnection sequence will start');
+  }
+
+  /// The post auto re connect callback
+  @override
+  Future<void> onAutoReconnected() async {
+    print('[MQTT client] MQTT Client auto reconnection sequence has completed');
   }
 }

@@ -42,6 +42,7 @@ class BtnIcon extends StatelessWidget {
             ),
           ),
         ),
+        VerticalSpace.xxs,
         Text(
           label,
           style: const TextStyle(
@@ -95,8 +96,8 @@ class BtnCircular extends StatelessWidget {
   }
 }
 
-class BtnSpider extends StatelessWidget {
-  const BtnSpider({
+class BtnRobot extends StatelessWidget {
+  const BtnRobot({
     required this.icon,
     required this.label,
     required this.enable,
@@ -118,7 +119,7 @@ class BtnSpider extends StatelessWidget {
       children: [
         Material(
           borderRadius: BorderRadius.circular(30),
-          color: enable ? CColors.principal : Colors.white,
+          color: enable ? Colors.greenAccent : Colors.white,
           child: InkWell(
             onTap: onTap,
             borderRadius: BorderRadius.circular(30),

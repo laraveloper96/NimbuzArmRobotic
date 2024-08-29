@@ -12,9 +12,9 @@ class SplashView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Label('Google IO', type: LabelType.max),
+            const Label('FlutterConf Latam', type: LabelType.max),
             VerticalSpace.md,
-            const Label('La Paz', type: LabelType.title),
+            const Label('Perú - Arequipa', type: LabelType.title),
             VerticalSpace.xl,
             const SizedBox(
               width: 30,

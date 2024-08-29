@@ -15,3 +15,18 @@ final class Initial extends PrincipalState {
   @override
   List<Object> get props => [robots];
 }
+
+class NewRobot extends PrincipalState {
+  const NewRobot(super.robots);
+
+  @override
+  List<Object> get props => [robots];
+}
+
+class ChangedStatusRobot extends PrincipalState {
+  const ChangedStatusRobot(super.robots, {required this.message});
+
+  final String message;
+  @override
+  List<Object> get props => [robots, message];
+}
