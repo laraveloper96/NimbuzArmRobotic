@@ -1,27 +1,33 @@
 import 'package:equatable/equatable.dart';
 
 enum Command {
-  none,
-  shoulder,
-  elbow,
-  wrist,
-  gripper,
-  stop,
-  save,
-  play,
-  reset,
-  speed;
+  none('n'),
+  gripper('g'),
+  wrist('w'),
+  arm('a'),
+  elbow('e'),
+  forearm('f'),
+  shoulder('s'),
+  stop('t'),
+  save('s'),
+  play('p'),
+  reset('r');
+
+  const Command(this.val);
+
+  final String val;
 
   static Command getCommand(String part) => switch (part) {
         ('gripper') => Command.gripper,
         ('wrist') => Command.wrist,
+        ('arm') => Command.arm,
         ('elbow') => Command.elbow,
+        ('forearm') => Command.forearm,
         ('shoulder') => Command.shoulder,
         ('play') => Command.play,
         ('save') => Command.save,
         ('stop') => Command.stop,
         ('reset') => Command.reset,
-        ('speed') => Command.speed,
         (_) => Command.none,
       };
 }

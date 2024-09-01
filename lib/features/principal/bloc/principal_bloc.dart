@@ -47,7 +47,7 @@ class PrincipalBloc extends Bloc<PrincipalEvent, PrincipalState> {
     final newlist = List<Robot>.from(state.robots);
     final search =
         newlist.indexWhere((el) => el.mac == ev.robot.mac && el.enable == true);
-
+    print('😀 search:$search');
     if (search >= 0) {
       newlist.removeAt(search);
       newlist.add(ev.robot.copyWith(enable: true));
@@ -108,16 +108,14 @@ class PrincipalBloc extends Bloc<PrincipalEvent, PrincipalState> {
     // }
 
     if (_mqtt.isConnect) {
-      print('[MQTT] Message was sended1${state.robots.length}');
-
       final robotsActive = state.robots.where((e) => e.enable);
-      print('[MQTT] Message was robotsActive${robotsActive.length}');
+      print('[MQTT] Found ${robotsActive.length} Robots Actived');
       for (final robot in robotsActive) {
-        print('clientID${robot.clientID} ev.robotEvent.command:${robot.name}');
+        print('[MQTT] Message was sended');
         await _mqtt.sendMessage(
           topic: Topic.move,
           clientId: robot.clientID,
-          command: ev.robotEvent.command.name,
+          command: ev.robotEvent.command.val,
           value: ev.robotEvent.value,
         );
       }

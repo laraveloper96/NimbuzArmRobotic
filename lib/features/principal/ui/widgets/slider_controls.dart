@@ -11,11 +11,11 @@ class SliderCtrls extends StatelessWidget {
       {required Command command, required double val}) async {
     if (context.mounted) {
       late int newVal;
-      if (command == Command.speed) {
-        newVal = mapValue(val, 0, 1, 100, 2000);
-      } else {
-        newVal = mapValue(val, 0, 1, 0, 180);
-      }
+      // if (command == Command.speed) {
+      //   newVal = mapValue(val, 0, 1, 100, 2000);
+      // } else {
+      newVal = mapValue(val, 0, 1, 0, 180);
+      // }
       final robotEvent = RobotEvent(command, newVal);
       context.read<PrincipalBloc>().add(SendCommandEv(robotEvent));
     }
@@ -34,9 +34,9 @@ class SliderCtrls extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       flex: 6,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: ListView(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // const Label('Perú - Arequipa', type: LabelType.max),
           // VerticalSpace.md,
@@ -58,6 +58,17 @@ class SliderCtrls extends StatelessWidget {
               onSendCommand(
                 context,
                 command: Command.wrist,
+                val: val,
+              );
+            },
+          ),
+          _SliderRobot(
+            text: 'Arm',
+            unit: '°',
+            onChanged: (val) {
+              onSendCommand(
+                context,
+                command: Command.arm,
                 val: val,
               );
             },
@@ -90,11 +101,11 @@ class SliderCtrls extends StatelessWidget {
             min: 100,
             max: 2000,
             onChanged: (val) {
-              onSendCommand(
-                context,
-                command: Command.speed,
-                val: val,
-              );
+              // onSendCommand(
+              //   context,
+              //   command: Command.speed,
+              //   val: val,
+              // );
             },
           ),
         ],
