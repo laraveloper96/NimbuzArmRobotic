@@ -45,12 +45,16 @@ class PrincipalBloc extends Bloc<PrincipalEvent, PrincipalState> {
 
   Future<void> _onAddRobotEv(AddRobotEv ev, PrincipalEmitter emit) async {
     final newlist = List<Robot>.from(state.robots);
-    final search =
-        newlist.indexWhere((el) => el.mac == ev.robot.mac && el.enable == true);
+    final search = newlist.indexWhere((el) {
+      print('${el.mac}  ${el.enable}');
+      return el.mac == ev.robot.mac;
+    });
     print('😀 search:$search');
     if (search >= 0) {
       newlist.removeAt(search);
-      newlist.add(ev.robot.copyWith(enable: true));
+      newlist.add(ev.robot.copyWith(
+        enable: true,
+      ));
       return;
     }
 
@@ -58,7 +62,6 @@ class PrincipalBloc extends Bloc<PrincipalEvent, PrincipalState> {
       newlist.add(ev.robot);
     }
 
-    robotALL = robotALL.copyWith(status: newlist.isNotEmpty);
     emit(NewRobot(newlist));
   }
 

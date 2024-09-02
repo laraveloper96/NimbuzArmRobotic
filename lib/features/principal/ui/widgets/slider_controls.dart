@@ -85,6 +85,17 @@ class SliderCtrls extends StatelessWidget {
             },
           ),
           _SliderRobot(
+            text: 'Forearm',
+            unit: '°',
+            onChanged: (val) {
+              onSendCommand(
+                context,
+                command: Command.forearm,
+                val: val,
+              );
+            },
+          ),
+          _SliderRobot(
             text: 'Shoulder',
             unit: '°',
             onChanged: (val) {
@@ -95,19 +106,19 @@ class SliderCtrls extends StatelessWidget {
               );
             },
           ),
-          _SliderRobot(
-            text: 'Speed',
-            unit: 'ms',
-            min: 100,
-            max: 2000,
-            onChanged: (val) {
-              // onSendCommand(
-              //   context,
-              //   command: Command.speed,
-              //   val: val,
-              // );
-            },
-          ),
+          // _SliderRobot(
+          //   text: 'Speed',
+          //   unit: 'ms',
+          //   min: 100,
+          //   max: 2000,
+          //   onChanged: (val) {
+          //     // onSendCommand(
+          //     //   context,
+          //     //   command: Command.speed,
+          //     //   val: val,
+          //     // );
+          //   },
+          // ),
         ],
       ),
     );
