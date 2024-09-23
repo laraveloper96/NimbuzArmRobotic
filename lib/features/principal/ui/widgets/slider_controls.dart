@@ -127,12 +127,14 @@ class _SliderRobot extends StatefulWidget {
     required this.text,
     required this.unit,
     this.max = 180,
+    this.min = 0,
   });
   final void Function(double)? onChanged;
   final String text;
   final String unit;
   final double min;
   final double max;
+
   @override
   State<_SliderRobot> createState() => _SliderRobotState();
 }
