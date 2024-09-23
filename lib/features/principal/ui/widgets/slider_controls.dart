@@ -8,14 +8,12 @@ class SliderCtrls extends StatelessWidget {
   const SliderCtrls({super.key});
 
   Future<void> onSendCommand(BuildContext context,
-      {required Command command, required double val}) async {
+      {required Command command,
+      required double val,
+      double maxVal = 180}) async {
     if (context.mounted) {
       late int newVal;
-      // if (command == Command.speed) {
-      //   newVal = mapValue(val, 0, 1, 100, 2000);
-      // } else {
-      newVal = mapValue(val, 0, 1, 0, 180);
-      // }
+      newVal = mapValue(val, 0, 1, 0, maxVal);
       final robotEvent = RobotEvent(command, newVal);
       context.read<PrincipalBloc>().add(SendCommandEv(robotEvent));
     }
@@ -43,12 +41,10 @@ class SliderCtrls extends StatelessWidget {
           _SliderRobot(
             text: 'Gripper',
             unit: '°',
+            max: 90,
             onChanged: (val) {
-              onSendCommand(
-                context,
-                command: Command.gripper,
-                val: val,
-              );
+              onSendCommand(context,
+                  command: Command.gripper, val: val, maxVal: 90);
             },
           ),
           _SliderRobot(
@@ -127,11 +123,9 @@ class SliderCtrls extends StatelessWidget {
 
 class _SliderRobot extends StatefulWidget {
   const _SliderRobot({
-    super.key,
     this.onChanged,
     required this.text,
     required this.unit,
-    this.min = 0,
     this.max = 180,
   });
   final void Function(double)? onChanged;
