@@ -3,11 +3,11 @@ import 'package:equatable/equatable.dart';
 enum Command {
   none('n'),
   gripper('g'),
-  wrist('w'),
-  arm('a'),
+  wristPitch('p'),
+  wristRoll('o'),
   elbow('e'),
-  forearm('f'),
   shoulder('s'),
+  waist('w'),
   stop('t'),
   save('s'),
   play('p'),
@@ -19,11 +19,11 @@ enum Command {
 
   static Command getCommand(String part) => switch (part) {
         ('gripper') => Command.gripper,
-        ('wrist') => Command.wrist,
-        ('arm') => Command.arm,
+        ('wristPitch') => Command.wristPitch,
+        ('wristRoll') => Command.wristRoll,
         ('elbow') => Command.elbow,
-        ('forearm') => Command.forearm,
         ('shoulder') => Command.shoulder,
+        ('waist') => Command.waist,
         ('play') => Command.play,
         ('save') => Command.save,
         ('stop') => Command.stop,
@@ -32,65 +32,28 @@ enum Command {
       };
 }
 
-// enum Command {
-//   none(0),
-//   go(1),
-//   stop(2),
-//   left(3),
-//   rigth(4),
-//   sit(6),
-//   greet(7),
-//   tragedy(5);
-
-//   const Command(this.value);
-//   final int value;
-
-// static Command getCommand(String gesture, PartOfArm part) {
-//   // Open_Palm
-//   // Pointing_Up
-//   // Thumb_Up
-//   // Thumb_Down
-//   // Victory
-//   // Closed_Fist
-//   // ILoveYou
-
-//   // print(hand);
-//   switch (gesture) {
-//     case 'Pointing_Up':
-//       return Command.go;
-//     case 'Open_Palm':
-//       return Command.stop;
-//     case 'Thumb_Up':
-//       if (hand == Hand.left) {
-//         return Command.left;
-//       }
-//       if (hand == Hand.rigth) {
-//         return Command.rigth;
-//       }
-//       break;
-//     case 'Thumb_Down':
-//       return Command.none;
-//     case 'Victory':
-//       return Command.greet;
-//     case 'Closed_Fist':
-//       return Command.sit;
-//     case 'ILoveYou':
-//       return Command.tragedy;
-//     default:
-//       return Command.none;
-//   }
-//   return Command.none;
-// }
-// }
-
 class RobotEvent extends Equatable {
-  const RobotEvent(
-    this.command,
-    this.value,
-  );
+  const RobotEvent({
+    required this.command,
+    required this.value,
+  });
 
   final Command command;
   final int value;
+
+  factory RobotEvent.fromJson(Map<String, dynamic> json) {
+    return RobotEvent(
+      command: Command.getCommand(json['command']),
+      value: json['value'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'command': command.name,
+      'value': value,
+    };
+  }
 
   @override
   List<Object> get props => [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nimbuz_arm_robotic/core/mqtt/mqtt.dart';
 import 'package:nimbuz_arm_robotic/core/mqtt/mqtt_impl.dart';
+import 'package:nimbuz_arm_robotic/core/utils/debouncer.dart';
 import 'package:nimbuz_arm_robotic/features/splash/ui/splash_page.dart';
 import 'package:nimbuz_arm_robotic/shared/utils/utils.dart';
 
@@ -17,6 +18,9 @@ class App extends StatelessWidget {
         // ),
         RepositoryProvider<Mqtt>(
           create: (context) => MqttImpl(),
+        ),
+        RepositoryProvider<Debouncer>(
+          create: (context) => Debouncer(),
         ),
       ],
       child: MaterialApp(

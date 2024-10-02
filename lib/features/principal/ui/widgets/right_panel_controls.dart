@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nimbuz_arm_robotic/core/robot_arm/models/robot_event.dart';
-import 'package:nimbuz_arm_robotic/features/principal/bloc/principal_bloc.dart';
+import 'package:nimbuz_arm_robotic/features/principal/blocs/principal/principal_bloc.dart';
 import 'package:nimbuz_arm_robotic/shared/utils/utils.dart';
 import 'package:nimbuz_arm_robotic/shared/widgets/widgets.dart';
 
@@ -11,8 +11,8 @@ class RightPanelCtrls extends StatelessWidget {
   Future<void> onSendCommand(BuildContext context,
       {required Command command, required int val}) async {
     if (context.mounted) {
-      final robotEvent = RobotEvent(command, val);
-      context.read<PrincipalBloc>().add(SendCommandEv(robotEvent));
+      // final robotEvent = RobotEvent(command, val);
+      // context.read<PrincipalBloc>().add(SendCommandEv(robotEvent));
     }
   }
 
@@ -26,13 +26,15 @@ class RightPanelCtrls extends StatelessWidget {
           BtnIcon(
             icon: '🚀',
             label: 'Export Positions',
-            onTap: () {},
+            onTap: () =>
+                context.read<PrincipalBloc>().add(const ExportMovesEv()),
           ),
           VerticalSpace.sl,
           BtnIcon(
             icon: '💾',
             label: 'Import Positions',
-            onTap: () {},
+            onTap: () =>
+                context.read<PrincipalBloc>().add(const ImportMovesEv()),
           ),
           VerticalSpace.sl,
           BtnIcon(

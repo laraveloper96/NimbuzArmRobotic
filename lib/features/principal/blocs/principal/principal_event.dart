@@ -35,3 +35,40 @@ class SendCommandEv extends PrincipalEvent {
   @override
   List<Object> get props => [robotEvent];
 }
+
+class SaveMovesEv extends PrincipalEvent {
+  const SaveMovesEv(this.robotEvents);
+
+  final List<RobotEvent> robotEvents;
+
+  @override
+  List<Object> get props => [robotEvents];
+}
+
+class PlayMovesEv extends PrincipalEvent {
+  const PlayMovesEv();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ExportMovesEv extends PrincipalEvent {
+  const ExportMovesEv();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ImportMovesEv extends PrincipalEvent {
+  const ImportMovesEv();
+
+  @override
+  List<Object> get props => [];
+}
+
+class ResetMovesEv extends PrincipalEvent {
+  const ResetMovesEv();
+
+  @override
+  List<Object> get props => [];
+}
