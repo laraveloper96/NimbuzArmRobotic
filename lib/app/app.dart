@@ -27,7 +27,7 @@ class App extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
-          fontFamily: CFonts.jetbrainsmono,
+          fontFamily: CFonts.heebo,
           colorScheme: ColorScheme.fromSwatch(
             backgroundColor: const Color.fromARGB(255, 234, 236, 238),
           ),

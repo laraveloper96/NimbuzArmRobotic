@@ -33,10 +33,6 @@ class Utils {
 
     if (result != null) {
       PlatformFile file = result.files.first;
-
-      // File file = File(result.files.single.path!);
-      print('file:${file.path}');
-      print('name:${file.name}');
       return file.path;
     } else {}
     return null;

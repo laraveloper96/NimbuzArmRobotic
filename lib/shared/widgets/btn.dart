@@ -10,7 +10,7 @@ class BtnIcon extends StatelessWidget {
     super.key,
   });
 
-  final String icon;
+  final IconData icon;
   final bool fill;
   final VoidCallback? onTap;
   final String label;
@@ -20,35 +20,38 @@ class BtnIcon extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Material(
-          borderRadius: BorderRadius.circular(30),
-          color: fill ? CColors.principal : Colors.white,
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(30),
-            child: Ink(
-              width: 80,
-              height: 40,
-              child: Center(
-                child: Text(
-                  icon,
-                  style: TextStyle(
-                    color: fill ? Colors.white : CColors.principal,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 25,
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.white.withOpacity(.25),
+            border: Border.all(
+              color: Colors.white,
+              width: 0.4,
+            ),
+          ),
+          child: Column(
+            children: [
+              InkWell(
+                onTap: onTap,
+                borderRadius: BorderRadius.circular(30),
+                child: Ink(
+                  width: 80,
+                  height: 30,
+                  child: Center(
+                    child: Icon(icon),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
-        VerticalSpace.xxs,
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
+              Text(
+                label,
+                style: TextStyle(
+                  // color: Colors.white,
+                  color: CColors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -86,7 +89,7 @@ class BtnCircular extends StatelessWidget {
             ),
             child: Icon(
               icon,
-              color: CColors.principal,
+              color: CColors.black,
               size: 20,
             ),
           ),
@@ -106,7 +109,7 @@ class BtnRobot extends StatelessWidget {
     super.key,
   });
 
-  final String icon;
+  final IconData icon;
   final bool status;
   final bool enable;
   final VoidCallback? onTap;
@@ -119,7 +122,9 @@ class BtnRobot extends StatelessWidget {
       children: [
         Material(
           borderRadius: BorderRadius.circular(30),
-          color: enable ? Colors.greenAccent : Colors.white,
+          color: enable
+              ? CColors.primaryColor
+              : CColors.primaryColor.withOpacity(.2),
           child: InkWell(
             onTap: onTap,
             borderRadius: BorderRadius.circular(30),
@@ -127,14 +132,10 @@ class BtnRobot extends StatelessWidget {
               width: 80,
               height: 40,
               child: Center(
-                child: Text(
+                child: Icon(
                   icon,
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: enable ? Colors.white : CColors.principal,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 25,
-                  ),
+                  color: CColors.black,
+                  size: 20,
                 ),
               ),
             ),

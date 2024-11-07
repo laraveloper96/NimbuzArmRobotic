@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nimbuz_arm_robotic/core/utils/debouncer.dart';
 import 'package:nimbuz_arm_robotic/features/principal/ui/widgets/left_panel_controls.dart';
-import 'package:nimbuz_arm_robotic/features/principal/ui/widgets/right_panel_controls.dart';
 import 'package:nimbuz_arm_robotic/features/principal/ui/widgets/slider_controls.dart';
+import 'package:nimbuz_arm_robotic/shared/utils/ccolors.dart';
 
 class PrincipalView extends StatefulWidget {
   const PrincipalView({super.key});
@@ -30,17 +30,47 @@ class _PrincipalViewState extends State<PrincipalView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Row(
-            children: [
-              const LeftPanelCtrls(),
-              SliderCtrls(
-                debouncer: _debouncer,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      CColors.gradientSecondary,
+                      CColors.gradientPrimary,
+                    ],
+                  ),
+                ),
               ),
-              const RightPanelCtrls(),
-            ],
-          ),
+            ),
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      CColors.black.withOpacity(.4),
+                      CColors.black.withOpacity(.05),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned.fill(
+              child: Row(
+                children: [
+                  const LeftPanelCtrls(),
+                  SliderCtrls(
+                    debouncer: _debouncer,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

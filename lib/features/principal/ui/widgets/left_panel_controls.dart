@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nimbuz_arm_robotic/core/mqtt/robot.dart';
 import 'package:nimbuz_arm_robotic/core/robot_arm/models/robot_event.dart';
 import 'package:nimbuz_arm_robotic/features/principal/blocs/principal/principal_bloc.dart';
-import 'package:nimbuz_arm_robotic/features/principal/blocs/sliders/slider_controls_bloc.dart';
+import 'package:nimbuz_arm_robotic/shared/utils/assets.dart';
 import 'package:nimbuz_arm_robotic/shared/utils/utils.dart';
-import 'package:nimbuz_arm_robotic/shared/widgets/widgets.dart';
+import 'package:nimbuz_arm_robotic/shared/widgets/btn.dart';
 
 class LeftPanelCtrls extends StatelessWidget {
   const LeftPanelCtrls({super.key});
@@ -23,56 +23,34 @@ class LeftPanelCtrls extends StatelessWidget {
     return Expanded(
       flex: 2,
       child: BlocBuilder<PrincipalBloc, PrincipalState>(
-          buildWhen: (previous, current) => current.status.isNewAddRobot,
-          builder: (context, state) {
-            // final robotAll = context.read<PrincipalBloc>().robotALL;
+        buildWhen: (previous, current) => current.status.isNewAddRobot,
+        builder: (context, state) {
+          // final robotAll = context.read<PrincipalBloc>().robotALL;
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // BtnIcon(
-                //   icon: '🚀',
-                //   label: 'Connect',
-                //   onTap: () {},
-                // ),
-                const _Robots(),
-                VerticalSpace.sl,
-                BtnIcon(
-                  icon: '💾',
-                  label: 'Save Position',
-                  onTap: () {
-                    final moves =
-                        context.read<SliderControlsBloc>().state.currentMoves;
-                    context.read<PrincipalBloc>().add(SaveMovesEv(moves));
-                  },
-                ),
-                VerticalSpace.sl,
-                BtnIcon(
-                  icon: '▶️',
-                  label: 'Play Moves',
-                  onTap: () {
-                    context.read<PrincipalBloc>().add(const PlayMovesEv());
-                  },
-                ),
-                VerticalSpace.sl,
-                BtnIcon(
-                  icon: '♻️',
-                  label: 'Reset Moves',
-                  onTap: () {
-                    context.read<PrincipalBloc>().add(const ResetMovesEv());
-                  },
-                ),
-                // VerticalSpace.sl,
-                // BtnIcon(
-                //   icon: '✋🏻',
-                //   label: 'Stop Moves',
-                //   onTap: () {
-                //     onSendCommand(context, command: Command.stop, val: 0);
-                //   },
-                // ),
-              ],
-            );
-          }),
+          return Padding(
+            padding: const EdgeInsets.all(24.0).copyWith(bottom: 8),
+            child: LayoutBuilder(
+              builder: (context, box) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const _Robots(),
+                    SizedBox(
+                      height: box.maxHeight * .8,
+                      width: box.maxWidth,
+                      child: Image.asset(
+                        AppAssets.arm,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -94,23 +72,123 @@ class _Robots extends StatelessWidget {
       builder: (context, state) {
         return Column(
           children: [
-            ...state.robots.map((e) {
-              return Padding(
-                padding: const EdgeInsets.only(
-                  top: 12,
-                ),
-                child: BtnRobot(
-                  icon: '🦾',
-                  label: e.name,
-                  status: e.status,
-                  enable: e.enable,
-                  onTap: () => robotToggle(context, e),
-                ),
-              );
-            }),
+            Switch(
+              // value: true,
+              value: false,
+              activeColor: Colors.white,
+              // activeColor: Colors.red,
+              trackOutlineColor: WidgetStatePropertyAll(
+                Colors.white.withOpacity(.25),
+              ),
+              trackOutlineWidth: const WidgetStatePropertyAll(.5),
+              // inactiveTrackColor: Colors.white.withOpacity(.25),
+              inactiveTrackColor: Colors.white.withOpacity(.25),
+
+              inactiveThumbColor: CColors.black.withOpacity(.25),
+              // inactiveThumbColor: Colors.white.withOpacity(.25),
+              onChanged: (value) {},
+            ),
+            VerticalSpace.md,
+            ...state.robots.map(
+              (e) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    top: 12,
+                  ),
+                  child: BtnRobot(
+                    icon: Icons.precision_manufacturing,
+                    label: e.name,
+                    status: e.status,
+                    enable: e.enable,
+                    onTap: () => robotToggle(context, e),
+                  ),
+                );
+              },
+            ),
           ],
         );
       },
+    );
+  }
+}
+
+class ToggleRobot extends StatelessWidget {
+  const ToggleRobot({
+    required this.icon,
+    required this.label,
+    required this.enable,
+    required this.status,
+    this.onTap,
+    super.key,
+  });
+
+  final IconData icon;
+  final bool status;
+  final bool enable;
+  final VoidCallback? onTap;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Switch(
+          value: true,
+          onChanged: (value) {},
+        ),
+        // Material(
+        //   borderRadius: BorderRadius.circular(30),
+        //   color: enable
+        //       ? CColors.primaryColor
+        //       : CColors.primaryColor.withOpacity(.2),
+        //   child: InkWell(
+        //     onTap: onTap,
+        //     borderRadius: BorderRadius.circular(30),
+        //     child: Ink(
+        //       width: 80,
+        //       height: 40,
+        //       child: Center(
+        //         child: Icon(
+        //           icon,
+        //           color: CColors.black,
+        //           size: 20,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     SizedBox(
+        //       width: 70,
+        //       child: Text(
+        //         label,
+        //         maxLines: 2,
+        //         overflow: TextOverflow.ellipsis,
+        //         softWrap: true,
+        //         textAlign: TextAlign.center,
+        //         style: const TextStyle(
+        //           color: Colors.black,
+        //           fontSize: 10,
+        //           fontWeight: FontWeight.bold,
+        //           overflow: TextOverflow.ellipsis,
+        //         ),
+        //       ),
+        //     ),
+        //     Container(
+        //       width: 7,
+        //       height: 7,
+        //       margin: const EdgeInsets.only(left: 3),
+        //       decoration: BoxDecoration(
+        //         color: status ? Colors.green : Colors.red,
+        //         borderRadius: BorderRadius.circular(7),
+        //       ),
+        //     ),
+        //   ],
+        // ),
+      ],
     );
   }
 }

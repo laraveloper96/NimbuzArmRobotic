@@ -34,19 +34,11 @@ class MqttImpl implements Mqtt {
       _client!.setProtocolV311();
       _client!.keepAlivePeriod = 20;
       _client!.connectTimeoutPeriod = 2000;
-      // _client!.autoReconnect = true;
-      // _client!.onAutoReconnect = onAutoReconnect;
-      // _client!.onAutoReconnected = onAutoReconnected;
-      final connMessage = MqttConnectMessage()
-          .authenticateAs('username', 'password')
-          .withWillTopic('willtopic')
-          .withWillMessage('Will message')
-          .startClean()
-          .withWillQos(MqttQos.atLeastOnce);
-      _client!.connectionMessage = connMessage;
 
       final connMess = MqttConnectMessage()
           .withClientIdentifier(options.clientId)
+          .withWillTopic('willtopic')
+          .withWillMessage('Will message')
           .startClean()
           .withWillQos(MqttQos.atMostOnce);
 

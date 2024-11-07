@@ -12,7 +12,7 @@
             // tool args is to pass important values which will be available as environmental variables
             "toolArgs": [
                 "--dart-define",
-                "WS=192.168.18.75",
+                "WS=10.240.210.85",
                 "--dart-define",
                 "PORT=1883",
             ]
@@ -25,7 +25,7 @@
             // tool args is to pass important values which will be available as environmental variables
             "toolArgs": [
                 "--dart-define",
-                "WS=192.168.18.75",
+                "WS=10.240.210.85",
                 "--dart-define",
                 "PORT=1883",
             ]
@@ -38,7 +38,7 @@
             // tool args is to pass important values which will be available as environmental variables
             "toolArgs": [
                 "--dart-define",
-                "WS=192.168.18.75",
+                "WS=10.240.210.85",
                 "--dart-define",
                 "PORT=1883",
             ]

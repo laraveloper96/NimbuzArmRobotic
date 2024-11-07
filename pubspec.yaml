@@ -61,7 +61,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/
+    - assets/img/
   fonts:
     - family: Jetbrainsmono
       fonts:
@@ -80,4 +80,22 @@ flutter:
         - asset: assets/fonts/jetbrainsmono/JetBrainsMono-ExtraLight.ttf
           weight: 200
         - asset: assets/fonts/jetbrainsmono/JetBrainsMono-Thin.ttf
+          weight: 100
+    - family: Heebo
+      fonts:
+        - asset: assets/fonts/heebo/Heebo-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/heebo/Heebo-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/heebo/Heebo-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/heebo/Heebo-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/heebo/Heebo-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/heebo/Heebo-Light.ttf
+          weight: 300
+        - asset: assets/fonts/heebo/Heebo-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/heebo/Heebo-Thin.ttf
           weight: 100

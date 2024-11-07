@@ -56,10 +56,9 @@ class PrincipalBloc extends Bloc<PrincipalEvent, PrincipalState> {
   Future<void> _onAddRobotEv(AddRobotEv ev, PrincipalEmitter emit) async {
     final newlist = List<Robot>.from(state.robots);
     final search = newlist.indexWhere((el) {
-      print('${el.mac}  ${el.enable}');
       return el.mac == ev.robot.mac;
     });
-    print('😀 search:$search');
+
     if (search >= 0) {
       newlist.removeAt(search);
       newlist.add(ev.robot.copyWith(
@@ -72,7 +71,6 @@ class PrincipalBloc extends Bloc<PrincipalEvent, PrincipalState> {
       newlist.add(ev.robot);
     }
 
-    // emit(NewRobot(newlist));
     emit(
       state.copyWith(
         status: PrincipalStatus.newAddRobot,
@@ -82,20 +80,6 @@ class PrincipalBloc extends Bloc<PrincipalEvent, PrincipalState> {
   }
 
   Future<void> _onEnableRobotEv(EnableRobotEv ev, PrincipalEmitter emit) async {
-    // print(
-    //     'entorl${ev.robot.clientID == robotALL.clientID} status:${ev.robot.status}');
-    // if (ev.robot.clientID == robotALL.clientID && ev.robot.status) {
-    //   final newList = List<Robot>.from(state.robots);
-    //   for (var i = 0; i < newList.length; i++) {
-    //     newList[i] = newList[i].copyWith(enable: false);
-    //   }
-    //   robotALL = robotALL.copyWith(enable: !ev.robot.enable);
-    //   print('entorl');
-    //   emit(NewRobot(newList));
-
-    //   return;
-    // }
-
     if (ev.robot.clientID != robotALL.clientID && ev.robot.status) {
       robotALL = robotALL.copyWith(enable: false);
       final index = state.robots.indexWhere((el) => el.mac == ev.robot.mac);
@@ -114,9 +98,6 @@ class PrincipalBloc extends Bloc<PrincipalEvent, PrincipalState> {
               message:
                   '[Robot] ${robot.name} ${status ? "Actived" : "Disabled"}'),
         );
-        // emit(ChangedStatusRobot(newList,
-        //     message:
-        //         '[Robot] ${robot.name} ${status ? "Actived" : "Disabled"}'));
       }
     }
   }
@@ -124,21 +105,10 @@ class PrincipalBloc extends Bloc<PrincipalEvent, PrincipalState> {
   Future<void> _onSendCommandEv(SendCommandEv ev, PrincipalEmitter emit) async {
     if (ev.robotEvent.command == Command.none) return;
 
-    // if (_mqtt.isConnect && robotALL.enable) {
-    //   print('[MQTT] Message was sended');
-    //   await _mqtt.sendMessage(
-    //     topic: Topic.move,
-    //     clientId: robotALL.clientID,
-    //     command: ev.robotEvent.command.name,
-    //     value: ev.robotEvent.value,
-    //   );
-    // }
-
     if (_mqtt.isConnect) {
       final robotsActive = state.robots.where((e) => e.enable);
-      print('[MQTT] Found ${robotsActive.length} Robots Actived');
+
       for (final robot in robotsActive) {
-        print('[MQTT] Message was sended');
         await _mqtt.sendMessage(
           topic: Topic.move,
           clientId: robot.clientID,
@@ -182,7 +152,7 @@ class PrincipalBloc extends Bloc<PrincipalEvent, PrincipalState> {
     if (robotsActive.isEmpty) {
       return;
     }
-    print('holis');
+
     try {
       exportToJsonFile(
         RobotData(
@@ -190,20 +160,18 @@ class PrincipalBloc extends Bloc<PrincipalEvent, PrincipalState> {
           steps: state.moves,
         ),
       );
-    } catch (e) {
-      print('holis:$e');
+    } catch (e, s) {
+      print('Error:$e, $s');
     }
   }
 
   Future<void> _onImportMovesEv(ImportMovesEv ev, PrincipalEmitter emit) async {
-    print('_onImportMovesEv');
     emit(state.copyWith(status: PrincipalStatus.loadingImport));
     try {
       final data = await importFromJsonFile();
       emit(state.copyWith(
           status: PrincipalStatus.successImport, moves: data.steps));
     } catch (e) {
-      print('_onImportMovesEvError:$e');
       emit(state.copyWith(
         status: PrincipalStatus.failureImport,
       ));
@@ -234,7 +202,6 @@ class PrincipalBloc extends Bloc<PrincipalEvent, PrincipalState> {
       final file = File(path);
       final jsonString = await file.readAsString();
       final Map<String, dynamic> jsonData = jsonDecode(jsonString);
-      debugPrint('okis: $jsonData');
 
       return RobotData.fromJson(jsonData);
     } catch (e) {
